@@ -124,9 +124,10 @@ app.post('/card_field_update', async (req, res) => {
 
 app.get('/test', async (req, res) => {
   console.log('get teste');
+  res.status(200).end();
   
   await downloadReports([
-    reportsIds.dados_membros,
+    reportsIds.situacao_dos_membros,
   ]);
 
   fs.readdir(__dirname, function (err, files) {
@@ -137,8 +138,6 @@ app.get('/test', async (req, res) => {
         console.log(file); 
     });
   });
-    
-  return res.status(200).json({ success: 'success' });
 });
 
 app.listen(process.env.PORT || 4000, function () {
