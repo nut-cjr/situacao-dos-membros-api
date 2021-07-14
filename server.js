@@ -124,7 +124,22 @@ app.post('/card_field_update', async (req, res) => {
 
 app.get('/test', async (req, res) => {
   console.log('get teste');
-  await downloadReports();
+  
+  await downloadReports([
+    reportsIds.aniversarios,
+    reportsIds.situacao_dos_membros,
+    reportsIds.dados_membros,
+  ]);
+
+  fs.readdir(__dirname, function (err, files) {
+    if (err) {
+        return console.log('Unable to scan directory:' + err);
+    } 
+    files.forEach(function (file) {
+        console.log(file); 
+    });
+  });
+    
   return res.status(200).json({ success: 'success' });
 });
 

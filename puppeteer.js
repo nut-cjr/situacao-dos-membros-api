@@ -21,44 +21,44 @@ async function login(page) {
   await page.waitForSelector(pipeCardSelector, { visible: true });
 }
 
-// async function downloadReport(page, reportId) {
-//   const exportReportButtonSelector = '[data-testid="report-export"]';
-//   const downloadReportButtonSelector = '[title="Download"]';
+async function downloadReport(page, reportId) {
+  const exportReportButtonSelector = '[data-testid="report-export"]';
+  const downloadReportButtonSelector = '[title="Download"]';
 
-//   await page.goto(
-//     `https://app.pipefy.com/pipes/301706843/reports_v2/${reportId}`
-//   );
+  await page.goto(
+    `https://app.pipefy.com/pipes/301706843/reports_v2/${reportId}`
+  );
 
-//   await page.waitForSelector(exportReportButtonSelector, { visible: true });
-//   await page.click(exportReportButtonSelector);
+  await page.waitForSelector(exportReportButtonSelector, { visible: true });
+  await page.click(exportReportButtonSelector);
 
-//   await page.waitForSelector(downloadReportButtonSelector, { visible: true });
-//   await page.click(downloadReportButtonSelector);
+  await page.waitForSelector(downloadReportButtonSelector, { visible: true });
+  await page.click(downloadReportButtonSelector);
 
-//   await page.waitForResponse(async (response) => {
-//     let downloaded;
-//     try {
-//       const response1 = await response.json();
-//       downloaded = response1.data.pipeReportExport.state === 'done';
-//       console.log(response1.data.pipeReportExport.state);
-//       console.log(downloaded);
-//     } catch {
-//       downloaded = false;
-//     }
-//     return (
-//       response.url() === 'https://app.pipefy.com/internal_api' &&
-//       response.status() === 200 &&
-//       downloaded
-//     );
-//   });
+  await page.waitForResponse(async (response) => {
+    let downloaded;
+    try {
+      const response1 = await response.json();
+      downloaded = response1.data.pipeReportExport.state === 'done';
+      console.log(response1.data.pipeReportExport.state);
+      console.log(downloaded);
+    } catch {
+      downloaded = false;
+    }
+    return (
+      response.url() === 'https://app.pipefy.com/internal_api' &&
+      response.status() === 200 &&
+      downloaded
+    );
+  });
 
-//   await Promise.all([
-//     page.click('#header-logo'),
-//     page.waitForNavigation({
-//       waitUntil: 'networkidle2',
-//     }),
-//   ]);
-// }
+  await Promise.all([
+    page.click('#header-logo'),
+    page.waitForNavigation({
+      waitUntil: 'networkidle2',
+    }),
+  ]);
+}
 
 async function downloadReports(reportsIds) {
   const browser = await puppeteer.launch({ 
@@ -81,16 +81,12 @@ async function downloadReports(reportsIds) {
 
   await login(page);
 
-  const title = await page.evaluate(() => document.title);
+  for (let index = 0; index < reportsIds.length; index++) {
+    const reportId = reportsIds[index];
+    await downloadReport(page, reportId);
+  }
 
-  console.log('title:', title);
-
-  await browser.close();
-
-//   for (let index = 0; index < reportsIds.length; index++) {
-//     const reportId = reportsIds[index];
-//     await downloadReport(page, reportId);
-//   }
+    await browser.close();
 
 //   await page.goto('https://rafa2903.requestcatcher.com/test');
 
@@ -257,7 +253,7 @@ try {
   await page.goto('https://app.pipefy.com/pipes/581467/reports_v2/133951');*/
   
   
-//   await browser.close();
+
 }
 
 module.exports = { downloadReports };
