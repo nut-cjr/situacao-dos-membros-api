@@ -122,8 +122,9 @@ app.post('/card_field_update', async (req, res) => {
   return res.status(200).json({ success: 'success' });
 });
 
-app.get('/test', function (req, res) {
+app.get('/test', async (req, res) => {
   console.log('get teste');
+  await downloadReports();
   return res.status(200).json({ success: 'success' });
 });
 

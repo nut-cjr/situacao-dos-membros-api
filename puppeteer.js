@@ -1,25 +1,25 @@
 const puppeteer = require('puppeteer');
 
-// async function login(page) {
-//   const loginInputSelector = '[name="username"]';
-//   const passwordInputSelector = '[name="password"]';
+async function login(page) {
+  const loginInputSelector = '[name="username"]';
+  const passwordInputSelector = '[name="password"]';
 
-//   await page.waitForSelector(loginInputSelector, { visible: true });
-//   await page.waitForSelector(passwordInputSelector, { visible: true });
+  await page.waitForSelector(loginInputSelector, { visible: true });
+  await page.waitForSelector(passwordInputSelector, { visible: true });
 
-//   await page.type(loginInputSelector, process.env.PIPEFY_EMAIL);
-//   await page.type(passwordInputSelector, process.env.PIPEFY_PASSWORD);
+  await page.type(loginInputSelector, process.env.PIPEFY_EMAIL);
+  await page.type(passwordInputSelector, process.env.PIPEFY_PASSWORD);
 
-//   await Promise.all([
-//     page.click('[type="submit"'),
-//     page.waitForNavigation({
-//       waitUntil: 'networkidle2',
-//     }),
-//   ]);
+  await Promise.all([
+    page.click('[type="submit"'),
+    page.waitForNavigation({
+      waitUntil: 'networkidle2',
+    }),
+  ]);
 
-//   const pipeCardSelector = '.pp-grid-cell.span-1.pp-pipe-box-toggler';
-//   await page.waitForSelector(pipeCardSelector, { visible: true });
-// }
+  const pipeCardSelector = '.pp-grid-cell.span-1.pp-pipe-box-toggler';
+  await page.waitForSelector(pipeCardSelector, { visible: true });
+}
 
 // async function downloadReport(page, reportId) {
 //   const exportReportButtonSelector = '[data-testid="report-export"]';
@@ -61,25 +61,31 @@ const puppeteer = require('puppeteer');
 // }
 
 async function downloadReports(reportsIds) {
-//   const browser = await puppeteer.launch({ 
-//       headless: true,
-//       defaultViewport: { width: 1366, height: 728 },
-        // args: [
-        //     '--no-sandbox',
-        //     '--disable-setuid-sandbox',
-        // ]
-//      });
+  const browser = await puppeteer.launch({ 
+      headless: false,
+      defaultViewport: { width: 1366, height: 728 },
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+        ]
+     });
 
-//   const page = await browser.newPage();
+  const page = await browser.newPage();
 
-//   await page._client.send('Page.setDownloadBehavior', {
-//     behavior: 'allow',
-//     downloadPath: './',
-//   });
+  await page._client.send('Page.setDownloadBehavior', {
+    behavior: 'allow',
+    downloadPath: './',
+  });
 
-//   await page.goto('https://app.pipefy.com/organizations/160282');
+  await page.goto('https://app.pipefy.com/organizations/160282');
 
-//   await login(page);
+  await login(page);
+
+  const title = await page.evaluate(() => document.title);
+
+  console.log('title:', title);
+
+  await browser.close();
 
 //   for (let index = 0; index < reportsIds.length; index++) {
 //     const reportId = reportsIds[index];
