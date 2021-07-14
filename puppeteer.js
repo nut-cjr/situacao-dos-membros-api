@@ -62,7 +62,7 @@ async function login(page) {
 
 async function downloadReports(reportsIds) {
   const browser = await puppeteer.launch({ 
-      headless: false,
+      headless: true,
       defaultViewport: { width: 1366, height: 728 },
         args: [
             '--no-sandbox',
