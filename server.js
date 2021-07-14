@@ -126,8 +126,6 @@ app.get('/test', async (req, res) => {
   console.log('get teste');
   
   await downloadReports([
-    reportsIds.aniversarios,
-    reportsIds.situacao_dos_membros,
     reportsIds.dados_membros,
   ]);
 
