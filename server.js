@@ -138,6 +138,16 @@ app.get('/test', async (req, res) => {
         console.log(file); 
     });
   });
+  console.log("================ download ===============");
+  
+    fs.readdir(path.join(__dirname, 'download', function (err, files) {
+    if (err) {
+        return console.log('Unable to scan directory:' + err);
+    } 
+    files.forEach(function (file) {
+        console.log(file); 
+    });
+  });
 });
 
 app.listen(process.env.PORT || 4000, function () {
