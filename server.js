@@ -140,7 +140,7 @@ app.get('/test', async (req, res) => {
   });
   console.log("================ download ===============");
   
-    fs.readdir(path.join(__dirname, 'download', function (err, files) {
+    fs.readdir(path.join(__dirname, 'download'), function (err, files) {
     if (err) {
         return console.log('Unable to scan directory:' + err);
     } 
