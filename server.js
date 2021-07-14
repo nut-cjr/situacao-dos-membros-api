@@ -138,9 +138,9 @@ app.get('/test', async (req, res) => {
   res.status(200).end();
   
   await downloadReports([
-    reportsIds.aniversarios,
-    reportsIds.situacao_dos_membros,
     reportsIds.dados_membros,
+    reportsIds.aniversarios,
+    reportsIds.situacao_dos_membros
   ]);
 
   fs.readdir(__dirname, function (err, files) {
@@ -151,9 +151,9 @@ app.get('/test', async (req, res) => {
         console.log(file); 
     });
   });
-  console.log("================ download ===============");
+  console.log("================ mutations ===============");
   
-    fs.readdir('./download', function (err, files) {
+    fs.readdir('./mutations', function (err, files) {
     if (err) {
         return console.log('Unable to scan directory:' + err);
     } 
