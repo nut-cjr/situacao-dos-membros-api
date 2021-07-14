@@ -59,8 +59,10 @@ app.post('/solicitation', async (req, res) => {
     
     if (intention !== 'Atualizar informações sobre estágio')
       await moveCardToPhase(cardId, intentionPhaseId);
-
-    await updateFieldsValues(cardId, intention, fields);
+    
+    if (intention !== 'Sair da empresa')
+      await updateFieldsValues(cardId, intention, fields);
+    
     await deleteCard(solicitationCardId);
   } catch (error) {
     console.error(error);
@@ -140,7 +142,7 @@ app.get('/test', async (req, res) => {
   });
   console.log("================ download ===============");
   
-    fs.readdir(path.join(__dirname, 'download'), function (err, files) {
+    fs.readdir('./download'), function (err, files) {
     if (err) {
         return console.log('Unable to scan directory:' + err);
     } 
