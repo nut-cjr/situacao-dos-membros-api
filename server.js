@@ -33,7 +33,16 @@ const reportsIds = {
 
 // console.log(path.dirname(process.cwd()));
 // console.log(path.resolve('./'));
-// console.log(__dirname);
+console.log(path.join(__dirname, 'download'));
+
+fs.readdir('./download', function (err, files) {
+  if (err) {
+      return console.log('Unable to scan directory:' + err);
+  } 
+  files.forEach(function (file) {
+      console.log(file); 
+  });
+});
 // console.log(__filename);
 
 // deleteAllCards();
@@ -60,7 +69,9 @@ app.post('/solicitation', async (req, res) => {
     if (intention !== 'Atualizar informações sobre estágio')
       await moveCardToPhase(cardId, intentionPhaseId);
 
-    await updateFieldsValues(cardId, intention, fields);
+    if (intention !== 'Sair da empresa')
+      await updateFieldsValues(cardId, intention, fields);
+
     await deleteCard(solicitationCardId);
   } catch (error) {
     console.error(error);
@@ -124,7 +135,7 @@ app.post('/card_field_update', async (req, res) => {
 
 app.get('/test', async (req, res) => {
   console.log('get teste');
-  
+
   await downloadReports([
     reportsIds.aniversarios,
     reportsIds.situacao_dos_membros,
