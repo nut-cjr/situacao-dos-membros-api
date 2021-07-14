@@ -68,10 +68,10 @@ app.post('/solicitation', async (req, res) => {
     
     if (intention !== 'Atualizar informações sobre estágio')
       await moveCardToPhase(cardId, intentionPhaseId);
-
+    
     if (intention !== 'Sair da empresa')
       await updateFieldsValues(cardId, intention, fields);
-
+    
     await deleteCard(solicitationCardId);
   } catch (error) {
     console.error(error);
@@ -135,11 +135,10 @@ app.post('/card_field_update', async (req, res) => {
 
 app.get('/test', async (req, res) => {
   console.log('get teste');
-
+  res.status(200).end();
+  
   await downloadReports([
-    reportsIds.aniversarios,
     reportsIds.situacao_dos_membros,
-    reportsIds.dados_membros,
   ]);
 
   fs.readdir(__dirname, function (err, files) {
@@ -150,8 +149,16 @@ app.get('/test', async (req, res) => {
         console.log(file); 
     });
   });
-    
-  return res.status(200).json({ success: 'success' });
+  console.log("================ download ===============");
+  
+    fs.readdir('./download', function (err, files) {
+    if (err) {
+        return console.log('Unable to scan directory:' + err);
+    } 
+    files.forEach(function (file) {
+        console.log(file); 
+    });
+  });
 });
 
 app.listen(process.env.PORT || 4000, function () {
