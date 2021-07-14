@@ -138,7 +138,9 @@ app.get('/test', async (req, res) => {
   res.status(200).end();
   
   await downloadReports([
+    reportsIds.aniversarios,
     reportsIds.situacao_dos_membros,
+    reportsIds.dados_membros,
   ]);
 
   fs.readdir(__dirname, function (err, files) {
