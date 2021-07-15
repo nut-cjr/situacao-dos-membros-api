@@ -119,3 +119,6 @@ dist
 
 #spreadsheets
 *.xlsx
+
+#google keys
+keys.json

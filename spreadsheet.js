@@ -29,6 +29,7 @@ async function updateSpreadsheet(newData) {
   };
 
   await googleAPI.spreadsheets.values.clear(clearOptions);
+  console.log('Speadsheet cleared');
 
   const updateOptions = {
     spreadsheetId: process.env.SPREADSHEET_ID,
@@ -38,6 +39,7 @@ async function updateSpreadsheet(newData) {
   };
 
   await googleAPI.spreadsheets.values.update(updateOptions);
+  console.log('Spreadsheets updated');
 }
 
 function getReportUrl(htmlEmail) {
@@ -48,6 +50,7 @@ function getReportUrl(htmlEmail) {
     .filter((element) => element.text === 'Download report')[0]
     .getAttribute('href');
 
+  console.log('Report URL: ' + url);
   return url;
 }
 

@@ -10,12 +10,12 @@ const {
   getCardData,
   updateFieldsValues,
 } = require('./requests');
-const { sendReportToEmail } = require('./puppeteer');
 const {
   updateSpreadsheet,
   getReportUrl,
   getReportData,
 } = require('./spreadsheet');
+const { sendReportToEmail } = require('./puppeteer');
 
 const app = express();
 app.use(express.json());
@@ -29,10 +29,6 @@ const phasesId = {
   Afastamento: 311317654,
   'Sair da empresa': 311317662,
 };
-
-// (async () => {
-//   await sendReportToEmail(process.env.REPORT_ID);
-// })();
 
 app.post('/solicitation', async (req, res) => {
   try {
@@ -62,13 +58,12 @@ app.post('/solicitation', async (req, res) => {
 });
 
 app.post('/report_updated', async (req, res) => {
+  res.status(200).send();
   await sendReportToEmail(process.env.REPORT_ID);
-
-  return res.status(200).json({ success: 'success' });
 });
 
 app.post('/new_email_received', async (req, res) => {
-  console.log(req.body.htmlEmail);
+
   const url = getReportUrl(req.body.htmlEmail);
   const reportData = await getReportData(url);
 

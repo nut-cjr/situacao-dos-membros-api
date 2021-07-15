@@ -29,6 +29,7 @@ async function sendToEmail(page, reportId) {
   await page.goto(
     `https://app.pipefy.com/pipes/301706843/reports_v2/${reportId}`
   );
+  console.log(`Accessing https://app.pipefy.com/pipes/301706843/reports_v2/${reportId}`);
 
   await page.waitForSelector(exportReportButtonSelector, { visible: true });
   await page.click(exportReportButtonSelector);
@@ -36,7 +37,9 @@ async function sendToEmail(page, reportId) {
   await page.waitForSelector(sendReportToEmailButtonSelector, {
     visible: true,
   });
+
   await page.click(sendReportToEmailButtonSelector);
+  console.log('Email sended');
 
   await page.waitForTimeout(3000);
 
@@ -58,12 +61,15 @@ async function sendReportToEmail(reportId) {
 
   const page = await browser.newPage();
 
+  console.log('Accessing https://app.pipefy.com/organizations/160282');
   await page.goto('https://app.pipefy.com/organizations/160282');
 
   await login(page);
+  console.log('Logged in');
 
   await sendToEmail(page, reportId);
 
+  console.log('Closing browser');
   await browser.close();
 }
 
