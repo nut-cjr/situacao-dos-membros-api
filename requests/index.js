@@ -91,43 +91,53 @@ async function getCardData(cardId) {
   return data.card;
 }
 
-function feriasOrFolgaValues(intention, fields) {
-  const numberInId = intention == 'Férias' ? 1 : 2;
 
-  const values = `[{
-        fieldId: "data_de_in_cio_${numberInId}",
+async function updateFieldsValues(cardId, intention, fields) {
+  let values;
+  switch (intention) {
+    case 'Folga':
+      values = `[{
+        fieldId: "data_de_in_cio_2",
         value: "${
           fields.filter((field) => field.name === 'Data de início')[0].value
         }"
     }, {
-        fieldId: "data_de_retorno_${numberInId}",
+        fieldId: "data_de_retorno_2",
         value: "${
           fields.filter((field) => field.name === 'Data de retorno')[0].value
         }"
     }, {
-        fieldId: "voc_falou_com_seu_gerente_e_ou_l_der_${numberInId}",
+        fieldId: "voc_falou_com_seu_gerente_e_ou_l_der_1",
         value: "${
           fields.filter(
             (field) => field.name === 'Você falou com seu gerente e/ou líder?'
           )[0].value
         }"
     }]`;
-
-  return values;
-}
-
-async function updateFieldsValues(cardId, intention, fields) {
-  let values;
-  switch (intention) {
-    case 'Folga':
-      values = feriasOrFolgaValues('Folga', fields);
       break;
     case 'Férias':
-      values = feriasOrFolgaValues('Férias', fields);
+      values = `[{
+        fieldId: "data_de_in_cio",
+        value: "${
+          fields.filter((field) => field.name === 'Data de início')[0].value
+        }"
+    }, {
+        fieldId: "data_de_retorno",
+        value: "${
+          fields.filter((field) => field.name === 'Data de retorno')[0].value
+        }"
+    }, {
+        fieldId: "voc_falou_com_seu_gerente_e_ou_l_der",
+        value: "${
+          fields.filter(
+            (field) => field.name === 'Você falou com seu gerente e/ou líder?'
+          )[0].value
+        }"
+    }]`;
       break;
     case 'Afastamento':
       values = `[{
-                fieldId: "data_de_in_cio_3",
+                fieldId: "data_de_in_cio_1",
                 value: "${new Date().toLocaleDateString('pt-BR')}"
             }]`;
       break;

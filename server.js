@@ -25,11 +25,11 @@ app.use(cors());
 app.set('trust proxy', 1);
 
 const phasesId = {
-  Folga: 311317647,
-  Férias: 311317648,
-  'Só para projetos': 311317653,
-  Afastamento: 311317654,
-  'Sair da empresa': 311317662,
+  Folga: 310223785,
+  Férias: 310223778,
+  'Só para projetos': 310223771,
+  Afastamento: 310223786,
+  'Sair da empresa': 310547859,
 };
 
 app.post('/solicitation', async (req, res) => {
@@ -43,7 +43,7 @@ app.post('/solicitation', async (req, res) => {
     ).value;
     const intentionPhaseId = phasesId[intention];
 
-    const pipeId = 301706843;
+    const pipeId = 301538945;
     const cardId = await getCardId(pipeId, email);
 
     if (intention !== 'Atualizar informações sobre estágio')

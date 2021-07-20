@@ -27,9 +27,9 @@ async function sendToEmail(page, reportId) {
   const sendReportToEmailButtonSelector = '[title="Email"]';
 
   await page.goto(
-    `https://app.pipefy.com/pipes/301706843/reports_v2/${reportId}`
+    `https://app.pipefy.com/pipes/301538945/reports_v2/${reportId}`
   );
-  console.log(`Accessing https://app.pipefy.com/pipes/301706843/reports_v2/${reportId}`);
+  console.log(`Accessing https://app.pipefy.com/pipes/301538945/reports_v2/${reportId}`);
 
   await page.waitForSelector(exportReportButtonSelector, { visible: true });
   await page.click(exportReportButtonSelector);
