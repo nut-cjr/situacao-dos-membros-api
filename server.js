@@ -22,6 +22,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.set('trust proxy', 1);
 
 const phasesId = {
   Folga: 311317647,
@@ -42,7 +43,7 @@ app.post('/solicitation', async (req, res) => {
     ).value;
     const intentionPhaseId = phasesId[intention];
 
-    const pipeId = process.env.PIPE_SITUACAO_DOS_MEMBROS_ID;
+    const pipeId = 301706843;
     const cardId = await getCardId(pipeId, email);
 
     if (intention !== 'Atualizar informações sobre estágio')
