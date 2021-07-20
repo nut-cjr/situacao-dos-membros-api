@@ -73,6 +73,7 @@ async function getReportData(url) {
     sheetValues = sheetValues.slice(1);
     sheetValues = sheetValues.map((row) => row.slice(1));
 
+    console.log('Report data fetched');
     return sheetValues;
   } catch (error) {
     console.error(error);

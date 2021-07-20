@@ -1,11 +1,15 @@
 const { gql } = require('graphql-request');
 
 const allCardsQuery = gql`
-  {
-    allCards(pipeId: 301706847) {
+  query ($pipeId: ID!) {
+    allCards(pipeId: $pipeId) {
       edges {
         node {
           id
+          fields {
+            name
+            value
+          }
         }
       }
     }
@@ -24,16 +28,4 @@ const cardByIdQuery = gql`
   }
 `;
 
-const cardByTitleQuery = gql`
-  query ($title: String!) {
-    cards(pipe_id: 301706843, first: 1, search: { title: $title }) {
-      edges {
-        node {
-          id
-        }
-      }
-    }
-  }
-`;
-
-module.exports = { allCardsQuery, cardByIdQuery, cardByTitleQuery };
+module.exports = { allCardsQuery, cardByIdQuery };

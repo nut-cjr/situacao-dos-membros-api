@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 
 const {
@@ -19,7 +20,6 @@ const { sendReportToEmail } = require('./puppeteer');
 
 const app = express();
 app.use(express.json());
-// app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
@@ -36,21 +36,21 @@ app.post('/solicitation', async (req, res) => {
     const solicitationCardId = req.body.data.card.id;
     const { fields } = await getCardData(solicitationCardId);
 
-    const name = fields.find((field) => field.name === 'Nome').report_value;
+    const email = fields.find((field) => field.name === 'Email CJR').value;
     const intention = fields.find(
       (field) => field.name === 'Qual sua intenção?'
     ).value;
     const intentionPhaseId = phasesId[intention];
 
-    const cardId = await getCardId(name);
+    const pipeId = process.env.PIPE_SITUACAO_DOS_MEMBROS_ID;
+    const cardId = await getCardId(pipeId, email);
 
     if (intention !== 'Atualizar informações sobre estágio')
       await moveCardToPhase(cardId, intentionPhaseId);
 
     if (intention !== 'Sair da empresa' && intention !== 'Só para projetos')
       await updateFieldsValues(cardId, intention, fields);
-
-    await deleteCard(solicitationCardId);
+    //await deleteCard(solicitationCardId);
   } catch (error) {
     console.error(error);
   }
@@ -58,9 +58,17 @@ app.post('/solicitation', async (req, res) => {
   return res.status(200).json({ success: 'success' });
 });
 
-app.post('/report_updated', async (req, res) => {
+const reportUpdatedLimiter = rateLimit({
+  windowMs: 60000, // 60 seconds
+  max: 1, // 1 request per minute
+  message: 'More than 1 request per minute',
+});
+
+app.post('/report_updated', reportUpdatedLimiter, async (req, res) => {
   res.status(200).send();
   await sendReportToEmail(process.env.REPORT_ID);
+  console.log('send report to email finished');
+  return;
 });
 
 app.post('/new_email_received', async (req, res) => {
@@ -74,15 +82,16 @@ app.post('/new_email_received', async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+
+  console.log('update spreadsheet finished');
+  return;
 });
 
 app.get('/test', async (req, res) => {
-  console.log("teste");
+  console.log('teste');
   return res.status(200).json({ success: 'success' });
-
-  //await sendReportToEmail(process.env.REPORT_ID);
 });
 
-app.listen(process.env.PORT || 4000, function () {
+app.listen(process.env.PORT || 4000, () => {
   console.log('app listening on port 4000');
 });

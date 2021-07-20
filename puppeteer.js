@@ -68,8 +68,7 @@ async function sendReportToEmail(reportId) {
   console.log('Logged in');
 
   await sendToEmail(page, reportId);
-
-  console.log('Closing browser');
+  
   await browser.close();
 }
 

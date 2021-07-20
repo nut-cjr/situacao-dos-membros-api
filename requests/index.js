@@ -1,10 +1,6 @@
 const { GraphQLClient } = require('graphql-request');
 
-const {
-  allCardsQuery,
-  cardByIdQuery,
-  cardByTitleQuery,
-} = require('../queries');
+const { allCardsQuery, cardByIdQuery } = require('../queries');
 
 const {
   deleteCardMutation,
@@ -22,13 +18,14 @@ const client = new GraphQLClient('https://api.pipefy.com/graphql', {
 
 function deleteAllCards() {
   const query = allCardsQuery;
+  let variables = { pipeId: 301706843 };
 
-  client.request(query).then((data) => {
+  client.request(query, variables).then((data) => {
     const cards = data.allCards.edges;
 
     cards.forEach((card) => {
       const mutation = deleteCardMutation;
-      const variables = { cardId: card.node.id };
+      variables = { cardId: card.node.id };
       client.request(mutation, variables);
     });
   });
@@ -56,9 +53,9 @@ async function moveCardToPhase(cardId, destinationPhaseId) {
   }
 }
 
-async function getCardId(title) {
-  const query = cardByTitleQuery;
-  const variables = { title };
+async function getAllCards(pipeId) {
+  const query = allCardsQuery;
+  const variables = { pipeId };
   let data;
 
   try {
@@ -67,7 +64,17 @@ async function getCardId(title) {
     throw new Error(error.message);
   }
 
-  return data.cards.edges[0].node.id;
+  return data.allCards.edges;
+}
+
+async function getCardId(pipeId, email) {
+
+  const getEmailField = (fields) => fields.filter(field => field.name === 'Email da CJR')[0];
+
+  const cards = await getAllCards(pipeId);
+  const card = cards.filter((card) => getEmailField(card.node.fields).value === email)[0];
+  const cardId = card.node.id;
+  return cardId;
 }
 
 async function getCardData(cardId) {
@@ -127,7 +134,10 @@ async function updateFieldsValues(cardId, intention, fields) {
     case 'Atualizar informações sobre estágio':
       values = `[{
                 fieldId: "faz_est_gio",
-                value: "${fields.filter((field) => field.name === 'Faz estágio?')[0].value}"
+                value: "${
+                  fields.filter((field) => field.name === 'Faz estágio?')[0]
+                    .value
+                }"
             }]`;
       break;
     default:
