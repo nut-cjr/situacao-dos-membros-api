@@ -47,7 +47,7 @@ app.post('/solicitation', async (req, res) => {
     if (intention !== 'Atualizar informações sobre estágio')
       await moveCardToPhase(cardId, intentionPhaseId);
 
-    if (intention !== 'Sair da empresa')
+    if (intention !== 'Sair da empresa' && intention !== 'Só para projetos')
       await updateFieldsValues(cardId, intention, fields);
 
     await deleteCard(solicitationCardId);
@@ -67,7 +67,7 @@ app.post('/new_email_received', async (req, res) => {
   res.status(200).send();
 
   try {
-    const url = getReportUrl(req.body.htmlEmail);  
+    const url = getReportUrl(req.body.htmlEmail);
     const reportData = await getReportData(url);
 
     updateSpreadsheet(reportData);
@@ -77,7 +77,7 @@ app.post('/new_email_received', async (req, res) => {
 });
 
 app.get('/test', async (req, res) => {
-  console.log('get teste');
+  console.log("teste");
   return res.status(200).json({ success: 'success' });
 
   //await sendReportToEmail(process.env.REPORT_ID);

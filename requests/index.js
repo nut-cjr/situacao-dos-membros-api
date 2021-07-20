@@ -118,26 +118,12 @@ async function updateFieldsValues(cardId, intention, fields) {
     case 'Férias':
       values = feriasOrFolgaValues('Férias', fields);
       break;
-    case 'Só para projetos':
-      values = `[{
-                fieldId: "motivo_1",
-                value: "${
-                  fields.filter((field) => field.name === 'Justifique')[0].value
-                }"
-            }]`;
-      break;
     case 'Afastamento':
       values = `[{
-                fieldId: "motivo",
-                value: "${
-                  fields.filter((field) => field.name === 'Justifique')[0].value
-                }"
-            }, {
                 fieldId: "data_de_in_cio_3",
                 value: "${new Date().toLocaleDateString('pt-BR')}"
             }]`;
       break;
-
     default:
       break;
   }
