@@ -67,7 +67,7 @@ app.post('/new_email_received', async (req, res) => {
   res.status(200).send();
 
   try {
-    const url = getReportUrl(req.body);  
+    const url = getReportUrl(req.body.htmlEmail);  
     const reportData = await getReportData(url);
 
     updateSpreadsheet(reportData);
