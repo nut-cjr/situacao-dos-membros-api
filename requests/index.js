@@ -124,6 +124,12 @@ async function updateFieldsValues(cardId, intention, fields) {
                 value: "${new Date().toLocaleDateString('pt-BR')}"
             }]`;
       break;
+    case 'Atualizar informações sobre estágio':
+      values = `[{
+                fieldId: "faz_est_gio",
+                value: "${fields.filter((field) => field.name === 'Faz estágio?')[0].value}"
+            }]`;
+      break;
     default:
       break;
   }
