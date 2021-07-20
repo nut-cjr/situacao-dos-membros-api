@@ -19,6 +19,7 @@ const { sendReportToEmail } = require('./puppeteer');
 
 const app = express();
 app.use(express.json());
+// app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
@@ -63,13 +64,12 @@ app.post('/report_updated', async (req, res) => {
 });
 
 app.post('/new_email_received', async (req, res) => {
-
-  const url = getReportUrl(req.body.htmlEmail);
-  const reportData = await getReportData(url);
-
   res.status(200).send();
 
   try {
+    const url = getReportUrl(req.body);  
+    const reportData = await getReportData(url);
+
     updateSpreadsheet(reportData);
   } catch (error) {
     console.log(error);
@@ -78,9 +78,9 @@ app.post('/new_email_received', async (req, res) => {
 
 app.get('/test', async (req, res) => {
   console.log('get teste');
-  res.status(200).end();
+  return res.status(200).json({ success: 'success' });
 
-  await sendReportToEmail(process.env.REPORT_ID);
+  //await sendReportToEmail(process.env.REPORT_ID);
 });
 
 app.listen(process.env.PORT || 4000, function () {

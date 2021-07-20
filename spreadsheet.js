@@ -3,14 +3,14 @@ const HTMLParser = require('node-html-parser');
 const ExcelJS = require('exceljs');
 const { google } = require('googleapis');
 
-const keys = require('./keys.json');
 
 function authenticate() {
-  // conta de serviço: nut-cjr@situacao-dos-membros-api.iam.gserviceaccount.com
-
-  const auth = new google.auth.JWT(keys.client_email, null, keys.private_key, [
-    'https://www.googleapis.com/auth/spreadsheets',
-  ]);
+  const auth = new google.auth.JWT(
+    process.env.CLIENT_EMAIL,
+    null,
+    process.env.PRIVATE_KEY,
+    ['https://www.googleapis.com/auth/spreadsheets']
+  );
 
   auth.authorize((error) => {
     if (error) throw error;
