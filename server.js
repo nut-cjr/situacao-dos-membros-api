@@ -60,9 +60,10 @@ app.post('/solicitation', async (req, res) => {
 });
 
 const reportUpdatedLimiter = rateLimit({
+  keyGenerator: () => 1,
   windowMs: 60000, // 60 seconds
   max: 1, // 1 request per minute
-  message: 'More than 1 request per minute',
+  message: 'More than 1 request per minute'
 });
 
 app.post('/report_updated', reportUpdatedLimiter, async (req, res) => {
