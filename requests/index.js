@@ -72,7 +72,7 @@ async function getCardId(pipeId, email) {
   const getEmailField = (fields) => fields.filter(field => field.name === 'Email da CJR')[0];
 
   const cards = await getAllCards(pipeId);
-  const card = cards.filter((card) => getEmailField(card.node.fields).value === email)[0];
+  const card = cards.filter((card) => getEmailField(card.node.fields)?.value === email)[0];
   const cardId = card.node.id;
   return cardId;
 }
