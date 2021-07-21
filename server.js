@@ -68,10 +68,11 @@ const reportUpdatedLimiter = rateLimit({
 
 app.post('/report_updated', reportUpdatedLimiter, async (req, res) => {
   const timer = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-  timer(5000);
+  await timer(5000);
   res.status(200).send();
 
   await sendReportToEmail(process.env.REPORT_ID);
+  
   console.log('send report to email finished');
   return;
 });
