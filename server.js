@@ -46,8 +46,13 @@ app.post('/solicitation', async (req, res) => {
     const pipeId = 301538945;
     const cardId = await getCardId(pipeId, email);
 
-    if (intention !== 'Atualizar informações sobre estágio')
+    if (
+      intention === 'Só para projetos' ||
+      intention === 'Afastamento' ||
+      intention === 'Sair da empresa'
+    ) {
       await moveCardToPhase(cardId, intentionPhaseId);
+    }
 
     if (intention !== 'Sair da empresa' && intention !== 'Só para projetos')
       await updateFieldsValues(cardId, intention, fields);
@@ -63,16 +68,17 @@ const reportUpdatedLimiter = rateLimit({
   keyGenerator: () => 1,
   windowMs: 60000, // 60 seconds
   max: 1, // 1 request per minute
-  message: 'More than 1 request per minute'
+  message: 'More than 1 request per minute',
 });
 
 app.post('/report_updated', reportUpdatedLimiter, async (req, res) => {
-  const timer = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+  const timer = (milliseconds) =>
+    new Promise((resolve) => setTimeout(resolve, milliseconds));
   await timer(5000);
   res.status(200).send();
 
   await sendReportToEmail(process.env.REPORT_ID);
-  
+
   console.log('send report to email finished');
   return;
 });
