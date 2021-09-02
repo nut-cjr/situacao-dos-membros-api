@@ -1,11 +1,12 @@
 const { GraphQLClient } = require('graphql-request');
 
-const { allCardsQuery, cardByIdQuery } = require('../queries');
+const { allCardsQuery, cardByIdQuery, getLabelsQuery } = require('../queries');
 
 const {
   deleteCardMutation,
   moveCardToPhaseMutation,
   generateUpdateFieldsValuesMutation,
+  updateLabelsMutation
 } = require('../mutations');
 
 const client = new GraphQLClient('https://api.pipefy.com/graphql', {
@@ -91,8 +92,33 @@ async function getCardData(cardId) {
   return data.card;
 }
 
+async function getPipeLabels(pipeId) {
+  const query = getLabelsQuery;
+  const variables = { pipeId };
+  let data;
 
-async function updateFieldsValues(cardId, intention, fields) {
+  try {
+    data = await client.request(query, variables);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+
+  return data.pipe.labels;
+}
+
+async function updateLabels(cardId, labelsIds) {
+  const mutation = updateLabelsMutation;
+  const variables = { cardId, labelsIds };
+
+  try {
+    await client.request(mutation, variables);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
+async function updateFieldsValues(cardId, intention, fields, labelsIds) {
   let values;
   switch (intention) {
     case 'Folga':
@@ -150,6 +176,12 @@ async function updateFieldsValues(cardId, intention, fields) {
                 }"
             }]`;
       break;
+    case 'Atualizar informações sobre núcleo':
+      values = `[{
+        fieldId: "n_cleo",
+        value: [${labelsIds}]
+      }]`;
+    break;
     default:
       break;
   }
@@ -171,4 +203,6 @@ module.exports = {
   getCardId,
   getCardData,
   updateFieldsValues,
+  getPipeLabels,
+  updateLabels
 };

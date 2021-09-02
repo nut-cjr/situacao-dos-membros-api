@@ -29,8 +29,20 @@ function generateUpdateFieldsValuesMutation(values) {
   `;
 }
 
+const updateLabelsMutation = gql`
+  mutation ($cardId: ID!, $labelsIds: [ID!]) {
+    updateCard(input: {
+      id: $cardId
+      label_ids: $labelsIds
+    }) {
+      clientMutationId
+    }
+  }
+`;
+
 module.exports = {
   deleteCardMutation,
   moveCardToPhaseMutation,
   generateUpdateFieldsValuesMutation,
+  updateLabelsMutation
 };

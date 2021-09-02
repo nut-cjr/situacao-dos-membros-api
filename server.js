@@ -10,6 +10,8 @@ const {
   getCardId,
   getCardData,
   updateFieldsValues,
+  getPipeLabels,
+  updateLabels
 } = require('./requests');
 const {
   updateSpreadsheet,
@@ -44,6 +46,15 @@ app.post('/solicitation', async (req, res) => {
     const intentionPhaseId = phasesId[intention];
 
     const pipeId = 301538945;
+    let labelsIds = []
+    
+    if (intention === 'Atualizar informações sobre núcleo') {
+      const labels = await getPipeLabels(pipeId);
+      const { value } = fields.find(field => field.name === 'Núcleo(s)');
+      labelsIds = labels.filter(label => value.includes(label.name)).map(label => Number(label.id));
+    }
+    console.log(labelsIds);
+
     const cardId = await getCardId(pipeId, email);
 
     if (
@@ -55,7 +66,10 @@ app.post('/solicitation', async (req, res) => {
     }
 
     if (intention !== 'Sair da empresa' && intention !== 'Só para projetos')
-      await updateFieldsValues(cardId, intention, fields);
+      await updateFieldsValues(cardId, intention, fields, labelsIds);
+
+    if (intention === 'Atualizar informações sobre núcleo');
+      await updateLabels(cardId, labelsIds);
     //await deleteCard(solicitationCardId);
   } catch (error) {
     console.error(error);

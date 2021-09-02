@@ -28,4 +28,16 @@ const cardByIdQuery = gql`
   }
 `;
 
-module.exports = { allCardsQuery, cardByIdQuery };
+const getLabelsQuery = gql`
+  query ($pipeId: ID!){
+    pipe(id: $pipeId) {
+      labels {
+        id
+        name
+      }
+    }
+  }
+`;
+
+
+module.exports = { allCardsQuery, cardByIdQuery, getLabelsQuery };
