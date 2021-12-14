@@ -53,14 +53,12 @@ app.post('/solicitation', async (req, res) => {
       const { value } = fields.find(field => field.name === 'Núcleo(s)');
       labelsIds = labels.filter(label => value.includes(label.name)).map(label => Number(label.id));
     }
-    console.log(labelsIds);
 
     const cardId = await getCardId(pipeId, email);
 
     if (
       intention === 'Só para projetos' ||
-      intention === 'Afastamento' ||
-      intention === 'Sair da empresa'
+      intention === 'Afastamento'
     ) {
       await moveCardToPhase(cardId, intentionPhaseId);
     }
