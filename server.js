@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 
 const {
@@ -13,12 +12,6 @@ const {
   getPipeLabels,
   updateLabels
 } = require('./requests');
-const {
-  updateSpreadsheet,
-  getReportUrl,
-  getReportData,
-} = require('./spreadsheet');
-const { sendReportToEmail } = require('./puppeteer');
 
 const app = express();
 app.use(express.json());
@@ -76,40 +69,6 @@ app.post('/solicitation', async (req, res) => {
   return res.status(200).json({ success: 'success' });
 });
 
-const reportUpdatedLimiter = rateLimit({
-  keyGenerator: () => 1,
-  windowMs: 60000, // 60 seconds
-  max: 1, // 1 request per minute
-  message: 'More than 1 request per minute',
-});
-
-app.post('/report_updated', reportUpdatedLimiter, async (req, res) => {
-  const timer = (milliseconds) =>
-    new Promise((resolve) => setTimeout(resolve, milliseconds));
-  await timer(5000);
-  res.status(200).send();
-
-  await sendReportToEmail(process.env.REPORT_ID);
-
-  console.log('send report to email finished');
-  return;
-});
-
-app.post('/new_email_received', async (req, res) => {
-  res.status(200).send();
-
-  try {
-    const url = getReportUrl(req.body.htmlEmail);
-    const reportData = await getReportData(url);
-
-    updateSpreadsheet(reportData);
-  } catch (error) {
-    console.log(error);
-  }
-
-  console.log('update spreadsheet finished');
-  return;
-});
 
 app.get('/test', async (req, res) => {
   console.log('teste');
