@@ -19,18 +19,19 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.set('trust proxy', 1)
 
-const PHASES_ID = {
+const PHASES_IDS = {
     Folga: 310223785,
     Férias: 310223778,
     'Só para projetos': 310223771,
     Afastamento: 310223786,
-    'Sair da empresa': 310547859,
+    'Sair da empresa': 315392034, // Move para a fase "Vai sair"
 }
 
-const PIPE_ID = 301538945
+const PIPE_ID = 301538945 // Pipe de situação dos membros
 
 app.post('/solicitation', async (req, res) => {
     try {
+        // Pipe de solicitações
         const solicitationCardId = req.body.data.card.id
         const { fields } = await getCardData(solicitationCardId)
 
@@ -38,7 +39,7 @@ app.post('/solicitation', async (req, res) => {
         const intention = fields.find(
             (field) => field.name === 'Qual sua intenção?'
         ).value
-        const intentionPhaseId = PHASES_ID[intention]
+        const intentionPhaseId = PHASES_IDS[intention]
 
         let labelsIds = []
 
@@ -52,15 +53,24 @@ app.post('/solicitation', async (req, res) => {
 
         const cardId = await getCardIdByEmail(PIPE_ID, email)
 
-        if (intention === 'Só para projetos' || intention === 'Afastamento') {
+        if (
+            intention === 'Só para projetos' ||
+            intention === 'Afastamento' ||
+            intention === 'Sair da empresa'
+        ) {
             await moveCardToPhase(cardId, intentionPhaseId)
         }
 
-        if (intention !== 'Sair da empresa' && intention !== 'Só para projetos')
+        if (
+            intention !== 'Sair da empresa' &&
+            intention !== 'Só para projetos'
+        ) {
             await updateFieldsValues(cardId, intention, fields, labelsIds)
+        }
 
-        if (intention === 'Atualizar informações sobre núcleo');
-        await updateLabels(cardId, labelsIds)
+        if (intention === 'Atualizar informações sobre núcleo') {
+            await updateLabels(cardId, labelsIds)
+        }
     } catch (error) {
         console.error(error)
     }
